@@ -75,6 +75,9 @@ contract AmazonDApp {
         // sender sends enough ETH to buy item
         require(msg.value >= item.cost, "Not Enough ETH!");
 
+        // require enouth item in stock
+        require(item.stock > 0, "Not Enough Stock!");
+
         // create order
         Order memory order = Order(block.timestamp, item);
 

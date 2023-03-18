@@ -138,5 +138,17 @@ describe("AmazonDApp", () => {
         })
       ).to.be.revertedWith("Not Enough ETH!");
     });
+
+    it("Should Failed if Not Enough Stock!", async () => {
+      const ONE_ITEM = 2;
+
+      await amazonDApp.list(ONE_ITEM, NAME, CATEGORY, IMAGE, COST, RATING, 0);
+
+      await expect(
+        amazonDApp.connect(addr1).buy(ONE_ITEM, {
+          value: COST,
+        })
+      ).to.be.revertedWith("Not Enough Stock!");
+    });
   });
 });
