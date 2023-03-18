@@ -20,6 +20,12 @@ contract AmazonDApp {
 
     event List(string name, uint256 cost, uint256 quantity);
 
+    modifier onlyOwner() {
+        // only owner
+        require(msg.sender == owner, "Only Owner Can List Item.");
+        _;
+    }
+
     constructor() {
         owner = msg.sender;
         // console.log("Contract Owner: %o", msg.sender);
@@ -34,10 +40,7 @@ contract AmazonDApp {
         uint256 _cost,
         uint256 _rating,
         uint256 _stock
-    ) public {
-        // only owner
-        require(msg.sender == owner, "Only Owner Can List Item.");
-
+    ) public onlyOwner {
         // create Item struct
         Item memory item = Item({
             id: _id,
