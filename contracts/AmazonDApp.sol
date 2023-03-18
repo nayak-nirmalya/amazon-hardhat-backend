@@ -26,6 +26,7 @@ contract AmazonDApp {
     mapping(address => mapping(uint256 => Order)) public orders;
 
     event List(string name, uint256 cost, uint256 quantity);
+    event Buy(address buyer, uint256 orderId, uint256 itemId);
 
     modifier onlyOwner() {
         // only owner
@@ -82,6 +83,7 @@ contract AmazonDApp {
         item.stock -= 1;
 
         // emit event
+        emit Buy(msg.sender, orderCount[msg.sender], item.id);
     }
 
     // withdraw funds

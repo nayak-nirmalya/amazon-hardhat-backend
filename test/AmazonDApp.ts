@@ -100,7 +100,7 @@ describe("AmazonDApp", () => {
       await transaction.wait();
 
       // buy item
-      transaction = await amazonDApp.connect(owner).buy(ID, {
+      transaction = await amazonDApp.connect(addr1).buy(ID, {
         value: COST,
       });
       await transaction.wait();
@@ -113,11 +113,23 @@ describe("AmazonDApp", () => {
       expect(contractBalance).to.equal(COST);
     });
 
-    // it("Should Emit List Event with Arguments", async () => {
-    //   expect(transaction)
-    //     .to.emit(amazonDApp, "List")
-    //     .withArgs(NAME, COST, STOCK);
-    // });
+    it("Updates Buyer's Order Count", async () => {
+      const result = await amazonDApp.orderCount(addr1.address);
+      expect(result).to.equal(1);
+    });
+
+    it("Should Add Order", async () => {
+      const order = await amazonDApp.orders(addr1.address, 1);
+
+      expect(order.time).to.be.greaterThan(0);
+      expect(order.item.name).to.equal(NAME);
+    });
+
+    it("Should Emit Buy Event with Arguments", async () => {
+      expect(transaction)
+        .to.emit(amazonDApp, "Buy")
+        .withArgs(addr1.address, 1, 1);
+    });
 
     // it("Should Failed if Anyone Except 'Owner' try to List", async () => {
     //   await expect(
