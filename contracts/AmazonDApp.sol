@@ -45,6 +45,7 @@ contract AmazonDApp {
         });
 
         // save Item struct
+        items[_id] = item;
     }
 
     // buy products
