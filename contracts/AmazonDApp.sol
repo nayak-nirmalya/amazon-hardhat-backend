@@ -35,6 +35,9 @@ contract AmazonDApp {
         uint256 _rating,
         uint256 _stock
     ) public {
+        // only owner
+        require(msg.sender == owner, "Only Owner Can List Item.");
+
         // create Item struct
         Item memory item = Item({
             id: _id,

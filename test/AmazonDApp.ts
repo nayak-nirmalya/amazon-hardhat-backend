@@ -70,5 +70,13 @@ describe("AmazonDApp", () => {
         .to.emit(amazonDApp, "List")
         .withArgs(NAME, COST, STOCK);
     });
+
+    it("Should Failed if Anyone Except 'Owner' try to List", async () => {
+      await expect(
+        amazonDApp
+          .connect(addr1)
+          .list(ID, NAME, CATEGORY, IMAGE, COST, RATING, STOCK)
+      ).to.be.revertedWith("Only Owner Can List Item.");
+    });
   });
 });
