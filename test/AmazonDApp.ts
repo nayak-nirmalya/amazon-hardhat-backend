@@ -15,6 +15,15 @@ describe("AmazonDApp", () => {
   let addr2: SignerWithAddress;
   let addrs: SignerWithAddress[];
 
+  const ID = 1;
+  const NAME = "Shoes";
+  const CATEGORY = "Clothing";
+  const IMAGE =
+    "https://ipfs.io/ipfs/QmTYEboq8raiBs7GTUg2yLXB3PMz6HuBNgNfSZBx5Msztg/shoes.jpg";
+  const COST = tokens(1);
+  const RATING = 4;
+  const STOCK = 5;
+
   beforeEach(async () => {
     // get signers
     [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
@@ -78,5 +87,44 @@ describe("AmazonDApp", () => {
           .list(ID, NAME, CATEGORY, IMAGE, COST, RATING, STOCK)
       ).to.be.revertedWith("Only Owner Can List Item.");
     });
+  });
+
+  describe("Buy Item", () => {
+    let transaction: ContractTransaction;
+
+    beforeEach(async () => {
+      // list item
+      transaction = await amazonDApp
+        .connect(owner)
+        .list(ID, NAME, CATEGORY, IMAGE, COST, RATING, STOCK);
+      await transaction.wait();
+
+      // buy item
+      transaction = await amazonDApp.connect(owner).buy(ID, {
+        value: COST,
+      });
+      await transaction.wait();
+    });
+
+    it("Updates the Contract Balance", async () => {
+      const contractBalance = await ethers.provider.getBalance(
+        amazonDApp.address
+      );
+      expect(contractBalance).to.equal(COST);
+    });
+
+    // it("Should Emit List Event with Arguments", async () => {
+    //   expect(transaction)
+    //     .to.emit(amazonDApp, "List")
+    //     .withArgs(NAME, COST, STOCK);
+    // });
+
+    // it("Should Failed if Anyone Except 'Owner' try to List", async () => {
+    //   await expect(
+    //     amazonDApp
+    //       .connect(addr1)
+    //       .list(ID, NAME, CATEGORY, IMAGE, COST, RATING, STOCK)
+    //   ).to.be.revertedWith("Only Owner Can List Item.");
+    // });
   });
 });

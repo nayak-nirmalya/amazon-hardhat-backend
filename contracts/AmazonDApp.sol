@@ -60,6 +60,12 @@ contract AmazonDApp {
     }
 
     // buy products
+    function buy(uint256 _id) public payable {
+        // receive fund
+        // create order
+        // subtract from stock
+        // emit event
+    }
 
     // withdraw funds
 }
