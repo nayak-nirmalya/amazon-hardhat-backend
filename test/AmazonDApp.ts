@@ -1,10 +1,8 @@
-import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { AmazonDApp, AmazonDApp__factory } from "../typechain-types";
 import { ContractTransaction } from "ethers";
+import { AmazonDApp, AmazonDApp__factory } from "../typechain-types";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
 const tokens = (no: number) => ethers.utils.parseUnits(no.toString(), "ether");
 
@@ -172,7 +170,7 @@ describe("AmazonDApp", () => {
         amazonDApp.address
       );
 
-      expect(contractBalanceAfter.toString()).to.equal("0");
+      expect(contractBalanceAfter).to.equal(0);
     });
 
     it("Should Update Owner Balance", async () => {
