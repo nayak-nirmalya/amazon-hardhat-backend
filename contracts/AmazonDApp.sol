@@ -5,9 +5,11 @@ import "hardhat/console.sol";
 
 contract AmazonDApp {
     string public name;
+    address public owner;
 
-    // console.log("Contract Name: %o", name);
     constructor() {
         name = "AmazonDApp";
+        owner = msg.sender;
+        console.log("Contract Name: %o\nContract Owner: %o", name, msg.sender);
     }
 }
