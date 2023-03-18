@@ -72,6 +72,9 @@ contract AmazonDApp {
         // fetch item
         Item memory item = items[_id];
 
+        // sender sends enough ETH to buy item
+        require(msg.value >= item.cost, "Not Enough ETH!");
+
         // create order
         Order memory order = Order(block.timestamp, item);
 

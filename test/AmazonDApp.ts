@@ -131,12 +131,12 @@ describe("AmazonDApp", () => {
         .withArgs(addr1.address, 1, 1);
     });
 
-    // it("Should Failed if Anyone Except 'Owner' try to List", async () => {
-    //   await expect(
-    //     amazonDApp
-    //       .connect(addr1)
-    //       .list(ID, NAME, CATEGORY, IMAGE, COST, RATING, STOCK)
-    //   ).to.be.revertedWith("Only Owner Can List Item.");
-    // });
+    it("Should Failed if Not Enough ETH", async () => {
+      await expect(
+        amazonDApp.connect(addr2).buy(ID, {
+          value: tokens(0.76),
+        })
+      ).to.be.revertedWith("Not Enough ETH!");
+    });
   });
 });
