@@ -30,7 +30,7 @@ contract AmazonDApp {
 
     modifier onlyOwner() {
         // only owner
-        require(msg.sender == owner, "Only Owner Can List Item.");
+        require(msg.sender == owner, "Only Owner Can Call.");
         _;
     }
 

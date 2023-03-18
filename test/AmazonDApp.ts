@@ -45,15 +45,6 @@ describe("AmazonDApp", () => {
   describe("Listing of Item", () => {
     let transaction: ContractTransaction;
 
-    const ID = 1;
-    const NAME = "Shoes";
-    const CATEGORY = "Clothing";
-    const IMAGE =
-      "https://ipfs.io/ipfs/QmTYEboq8raiBs7GTUg2yLXB3PMz6HuBNgNfSZBx5Msztg/shoes.jpg";
-    const COST = tokens(1);
-    const RATING = 4;
-    const STOCK = 5;
-
     beforeEach(async () => {
       transaction = await amazonDApp
         .connect(owner)
@@ -85,7 +76,7 @@ describe("AmazonDApp", () => {
         amazonDApp
           .connect(addr1)
           .list(ID, NAME, CATEGORY, IMAGE, COST, RATING, STOCK)
-      ).to.be.revertedWith("Only Owner Can List Item.");
+      ).to.be.revertedWith("Only Owner Can Call.");
     });
   });
 
@@ -149,6 +140,43 @@ describe("AmazonDApp", () => {
           value: COST,
         })
       ).to.be.revertedWith("Not Enough Stock!");
+    });
+  });
+
+  describe("Withdraw", () => {
+    beforeEach(async () => {
+      await amazonDApp.list(ID, NAME, CATEGORY, IMAGE, COST, RATING, STOCK);
+      await amazonDApp.connect(addr1).buy(ID, {
+        value: COST,
+      });
+    });
+
+    it("Should Fail if Anyone Except Owner Call the Function", async () => {
+      await expect(amazonDApp.connect(addr1).withdraw()).to.be.revertedWith(
+        "Only Owner Can Call."
+      );
+    });
+
+    it("Should Drain Contract Balance", async () => {
+      const ownerBalanceBefore = await ethers.provider.getBalance(
+        owner.address
+      );
+      const contractBalanceBefore = await ethers.provider.getBalance(
+        amazonDApp.address
+      );
+
+      await amazonDApp.withdraw();
+
+      const ownerBalanceAfter = await ethers.provider.getBalance(owner.address);
+      const contractBalanceAfter = await ethers.provider.getBalance(
+        amazonDApp.address
+      );
+
+      expect(contractBalanceAfter.toString()).to.equal("0");
+    });
+
+    it("Should Update Owner Balance", async () => {
+      await expect(amazonDApp.withdraw()).to.changeEtherBalance(owner, COST);
     });
   });
 });
