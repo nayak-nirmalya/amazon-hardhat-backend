@@ -18,9 +18,11 @@ contract AmazonDApp {
 
     mapping(uint256 => Item) public items;
 
+    event List(string name, uint256 cost, uint256 quantity);
+
     constructor() {
         owner = msg.sender;
-        console.log("Contract Owner: %o", msg.sender);
+        // console.log("Contract Owner: %o", msg.sender);
     }
 
     // list products
@@ -46,6 +48,9 @@ contract AmazonDApp {
 
         // save Item struct
         items[_id] = item;
+
+        // emit event
+        emit List(_name, _cost, _stock);
     }
 
     // buy products

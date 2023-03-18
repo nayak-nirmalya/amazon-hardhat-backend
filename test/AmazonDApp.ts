@@ -4,6 +4,7 @@ import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import { AmazonDApp, AmazonDApp__factory } from "../typechain-types";
+import { ContractTransaction } from "ethers";
 
 const tokens = (no: number) => ethers.utils.parseUnits(no.toString(), "ether");
 
@@ -33,7 +34,7 @@ describe("AmazonDApp", () => {
   });
 
   describe("Listing of Item", () => {
-    let transaction;
+    let transaction: ContractTransaction;
 
     const ID = 1;
     const NAME = "Shoes";
@@ -54,6 +55,7 @@ describe("AmazonDApp", () => {
 
     it("Should Verify Listing of An Item with All Attributes", async () => {
       const item = await amazonDApp.items(ID);
+
       expect(item.id).to.equal(ID);
       expect(item.name).to.equal(NAME);
       expect(item.category).to.equal(CATEGORY);
@@ -61,6 +63,12 @@ describe("AmazonDApp", () => {
       expect(item.cost).to.equal(COST);
       expect(item.rating).to.equal(RATING);
       expect(item.stock).to.equal(STOCK);
+    });
+
+    it("Should Emit List Event with Arguments", async () => {
+      expect(transaction)
+        .to.emit(amazonDApp, "List")
+        .withArgs(NAME, COST, STOCK);
     });
   });
 });
