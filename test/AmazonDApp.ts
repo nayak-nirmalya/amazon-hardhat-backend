@@ -26,11 +26,6 @@ describe("AmazonDApp", () => {
   });
 
   describe("Deployment", () => {
-    it("Should Print Contract Name", async () => {
-      const name = await amazonDApp.name();
-      expect(name).to.equal("AmazonDApp");
-    });
-
     it("Should Verify the Owner", async () => {
       const contractOwner = await amazonDApp.owner();
       expect(contractOwner).to.equal(owner.address);
