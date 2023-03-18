@@ -1,23 +1,22 @@
 import { ethers } from "hardhat";
+import items from "../items.json";
+import { AmazonDApp, AmazonDApp__factory } from "../typechain-types";
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+  // get signers
+  const [owner] = await ethers.getSigners();
 
-  const lockedAmount = ethers.utils.parseEther("0.001");
+  // deploy contract
+  const AmazonDApp = (await ethers.getContractFactory(
+    "AmazonDApp"
+  )) as AmazonDApp__factory;
+  const amazonDApp: AmazonDApp = await AmazonDApp.deploy();
 
-  const Lock = await ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+  await amazonDApp.deployed();
 
-  await lock.deployed();
-
-  console.log(
-    `Lock with ${ethers.utils.formatEther(lockedAmount)}ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
-  );
+  console.log(`AmazonDApp deployed to ${amazonDApp.address}`);
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
 main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
