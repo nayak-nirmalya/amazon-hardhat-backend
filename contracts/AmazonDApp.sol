@@ -14,9 +14,16 @@ contract AmazonDApp {
         uint256 stock;
     }
 
+    struct Order {
+        uint256 time;
+        Item item;
+    }
+
     address public owner;
 
     mapping(uint256 => Item) public items;
+    mapping(address => uint256) public orderCount;
+    mapping(address => mapping(uint256 => Order)) public orders;
 
     event List(string name, uint256 cost, uint256 quantity);
 
@@ -61,9 +68,19 @@ contract AmazonDApp {
 
     // buy products
     function buy(uint256 _id) public payable {
-        // receive fund
+        // fetch item
+        Item memory item = items[_id];
+
         // create order
+        Order memory order = Order(block.timestamp, item);
+
+        // save order to blockchain (add order for user)
+        orderCount[msg.sender] += 1;
+        orders[msg.sender][orderCount[msg.sender]] = order;
+
         // subtract from stock
+        item.stock -= 1;
+
         // emit event
     }
 
