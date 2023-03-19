@@ -33,6 +33,9 @@
 In a separate terminal execute:
 `$ npx hardhat run .\scripts\deploy.ts --network localhost`
 
+To Deploy to Polygon Mumbai TestNet:
+`$ npx hardhat run .\scripts\deploy.ts --network polygon_mumbai`
+
 ### 6. Start Front-End [React (Vite)](https://github.com/nayak-nirmalya/amazon-fs-web3)
 
 ```
